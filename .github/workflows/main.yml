@@ -56,7 +56,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: github-pages
-          branch: main
+          branch: gh-pages
           ssh-key: true
 
       # - name: Setup Pages
