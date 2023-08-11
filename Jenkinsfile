@@ -4,30 +4,6 @@ pipeline {
     parameters {
         choice(name: 'DEPLOY_TO_PRODUCTION', choices: ['Yes', 'No'], description: "Parameter responsible for deploying to PRD or not")
         choice(name: "CUCUMBER_TAG", choices: ['No', 'Yes'], description: "To run by Cucumber tag?")
-        [$class              : 'DynamicReferenceParameter',
-            choiceType          : 'ET_FORMATTED_HTML',
-            omitValueField      : true,
-            description         : 'Type cucumber tag here.',
-            name                : 'CUCUMBER_TAG_TXT',
-            referencedParameters: 'CUCUMBER_TAG',
-            script              : [
-                    $class        : 'GroovyScript',
-                    fallbackScript: [
-                            classpath: [],
-                            sandbox  : false,
-                            script   :
-                                    'return[\'Could not get tag from CUCUMBER_TAG_TXT Param\']'
-                    ],
-                    script        : [
-                            classpath: [],
-                            sandbox  : false,
-                            script   :
-                                    '''if(CUCUMBER_TAG.contains('Yes')) {return inputBox="<input name='value' type='text' placeholder='@tag' value='@'' style='width: 20%'>"}
-else if(CUCUMBER_TAG.contains('No')) {return inputBox="<input name='value' type='hidden'>"}
-'''
-                    ]
-            ]
-        ]
     }
     agent any
     triggers {
