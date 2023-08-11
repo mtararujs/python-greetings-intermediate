@@ -6,6 +6,11 @@ on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+    DEPLOY_TO_PRODUCTION:
+      description: 'Deploy to production?'
+      default: 'Yes'
+      required: true
 
 jobs:
   build:
