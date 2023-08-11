@@ -2,7 +2,7 @@ from flask import Flask
 import redis
 
 app = Flask(__name__)
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_client = redis.StrictRedis(host='redis-service', port=6379, db=0, decode_responses=True)
 
 def get_greetings_from_redis():
     cached_greeting = redis_client.get('latest_greeting')
