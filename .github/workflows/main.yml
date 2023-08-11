@@ -8,51 +8,50 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-deploy-test:
+  build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Build and Push Docker Image
+      - name: Build Docker Image
         run: |
           echo "Build $GITHUB_SHA"
           docker build -t mtararujs/python-greetings-app:latest .
-          docker push mtararujs/python-greetings-app:latest
+          # docker push mtararujs/python-greetings-app:latest
 
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to Dev
         run: |
-          # Perform deployment to dev environment
           echo "Deployment of hello-app to dev is starting.."
           # Insert your deployment commands here
 
-          # Load common functions
-          # Insert loading of commonFunctions.groovy here
-
-          if [[ ${{ matrix.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
+      - name: Print Cucumber Tags
+        run: |
+          if [[ ${{ env.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
             echo "cucumber tags yes"
           else
             echo "cucumber tags no"
           fi
 
+  test-dev:
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+    steps:
       - name: Test Dev
         run: |
-          # Perform testing for dev environment
           echo "Testing of hello-app to dev is starting"
           # Insert your testing commands here
 
-      - name: Approval
-        if: github.event_name == 'workflow_run'
+  approval:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_run'
+    needs: test-dev
+    steps:
+      - name: Wait for Approval
         run: |
           deploymentDelay=$(curl -s -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -60,34 +59,34 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/dispatches | jq -r '.workflow_run.updated_at')
           sleep "$deploymentDelay"
 
+  deploy-prd:
+    runs-on: ubuntu-latest
+    needs: approval
+    if: ${{ matrix.DEPLOY_TO_PRODUCTION }} == 'Yes'
+    steps:
       - name: Deploy to PRD
-        if: matrix.DEPLOY_TO_PRODUCTION == 'Yes'
         run: |
-          # Perform deployment to production environment
           echo "Deployment of hello-app to prd is starting.."
           # Insert your deployment commands here
 
+  test-prd:
+    runs-on: ubuntu-latest
+    needs: deploy-prd
+    if: ${{ matrix.DEPLOY_TO_PRODUCTION }} == 'Yes'
+    steps:
       - name: Test PRD
-        if: matrix.DEPLOY_TO_PRODUCTION == 'Yes'
         run: |
-          # Perform testing for production environment
           echo "Testing of hello-app to prd is starting"
           # Insert your testing commands here
 
+  invoke-pipeline:
+    runs-on: ubuntu-latest
+    needs: test-prd
+    steps:
       - name: Invoke Pipeline
         run: |
-          # Trigger another pipeline job
           echo "Invoking another pipeline job..."
           # Insert your job triggering commands here
-
-      - name: Clean up
-        run: |
-          echo 'Cleanup Condition!'
-          docker stop $(docker ps -a -q)
-          docker rm -f $(docker ps -a -q)
-
-    env:
-      DEPLOY_TO_PRODUCTION: ${{ matrix.DEPLOY_TO_PRODUCTION }}
 
   cleanup:
     runs-on: ubuntu-latest
