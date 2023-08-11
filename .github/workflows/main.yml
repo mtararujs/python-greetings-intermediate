@@ -36,7 +36,7 @@ jobs:
           # docker push mtararujs/python-greetings-app:latest
 
   deploy-dev:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     if: ${{ needs.build.result == 'success' }}
     environment:
