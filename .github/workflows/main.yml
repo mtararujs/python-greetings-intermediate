@@ -4,6 +4,7 @@ permissions:
   issues: write
   pages: write
   id-token: write
+  contents: read
 
 on:
   schedule:
@@ -47,21 +48,16 @@ jobs:
           echo "Deployment of hello-app to dev is starting.."
           # Insert your deployment commands here
 
-      # - uses: actions/upload-artifact@master
-      #   with:
-      #     name: page
-      #     path: github-pages
-      #     if-no-files-found: error
-      # - uses: actions/download-artifact@master
-      #   with:
-      #     name: page
-      #     path: .
-      - uses: actions/configure-pages@v1
-      - uses: actions/upload-pages-artifact@v1
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          path: .
-      - id: deployment
-        uses: actions/deploy-pages@main
+            # Upload the coverage directory from the repository
+            path: 'github-pages'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
 
       - name: Print Cucumber Tags
         env:
