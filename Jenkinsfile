@@ -96,6 +96,28 @@ def deploy(String environment){
 
 def test(String environment){
    echo "Testing of hello-app to ${environment} is starting"
+   parallel {
+        stage('Test 1') {
+            steps {
+                echo "test parallel 1"
+            }
+            post {
+                always {
+                    echo "test parallel 1 post"
+                }
+            }
+        }
+        stage('Test 2') {
+            steps {
+                echo "test parallel 2"
+            }
+            post {
+                always {
+                    echo "test parallel 2 post"
+                }
+            }
+        }
+    }
 //    sh "docker run --network=host -d -t --name api_test_executor_${environment} mtararujs/ubuntu_ruby_executor:latest"
 //    try{
 //         sh "docker exec api_test_executor_${environment} cucumber PLATFORM=${environment} --format html --out test-output/report.html"
