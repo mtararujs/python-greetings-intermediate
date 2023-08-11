@@ -90,6 +90,13 @@ pipeline {
                 }
             }
         }
+        stage ('Invoke_pipeline') {
+            steps {
+                build job: 'hello-world', parameters: [
+                string(name: 'NAME', value: "Martins")
+                ]
+            }
+        }
     }
     post {
         always {
