@@ -1,4 +1,4 @@
-pipeline {
+properties([
     parameters {
         choice(name: 'DEPLOY_TO_PRODUCTION', choices: ['Yes', 'No'], description: 'Parameter responsible for deploying to PRD or not'),
         choice(name: "CUCUMBER_TAG", choices: ['No', 'Yes'], description: "To run by Cucumber tag?"),
@@ -27,6 +27,9 @@ else if(CUCUMBER_TAG.contains('No')) {return inputBox="<input name='value' type=
             ]
         ],
     }
+])
+
+pipeline {
     agent any
     triggers {
         pollSCM('*/1 * * * *')
