@@ -43,12 +43,16 @@ jobs:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: list files
+        run: ls
       - name: Deploy to Dev
         run: |
           echo "Deployment of hello-app to dev is starting.."
           # Insert your deployment commands here
 
-      - name: Deploy 🚀
+      - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: github-pages
