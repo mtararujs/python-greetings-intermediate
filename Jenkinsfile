@@ -56,7 +56,7 @@ else if(CUCUMBER_TAG.contains('No')) {return inputBox="<input name='value' type=
 '''
                     ]
             ]
-        ],
+        ]
     }
     agent any
     triggers {
