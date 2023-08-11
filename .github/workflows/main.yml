@@ -2,6 +2,8 @@ name: CI/CD Pipeline
 
 permissions:
   issues: write
+  pages: write
+  id-token: write
 
 on:
   schedule:
@@ -75,6 +77,9 @@ jobs:
         run: |
           echo "Testing of hello-app to dev is starting"
           # Insert your testing commands here
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
 
   deploy-prd:
     runs-on: ubuntu-latest
