@@ -22,6 +22,11 @@ pipeline {
                 script{
                     deploy("dev")
                     load("commonFunctions.groovy").deploy("test groovy function")
+                    if (params.DEPLOY_TO_PRODUCTION.equals("Yes")) {
+                        echo "cucumber tags yes"
+                    } else {
+                        echo "cucumber tags no"
+                    }
                 }
             }
         }
@@ -136,4 +141,27 @@ def test(String environment){
 //             reportName: "Test Report ${environment}", 
 //             reportTitles: "Test Report ${environment}"])
 //    }
+                // catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                //     script {
+                //         echo '\033[1;34mMoving Allure results files to WS... \033[0m'
+                //         String allureResults = "/tmp/mobile-test/$BUILD_NUMBER/allure-results/"
+                //         def allureResultsExist = fileExists allureResults
+
+                //         if (allureResultsExist) {
+                //             sh "cp -a $allureResults $env.WORKSPACE/Mobile/allure-results/"
+                //             echo '\033[1;34mGenerating environment.properties file...\033[0m'
+                //             echo "\033[1;34mPublishing Allure report...\033[0m"
+                //             try {
+                //                 sh "cp -a /tmp/mobile-test/$BUILD_NUMBER/environment.properties $env.WORKSPACE/Mobile/allure-results/"
+                //             }
+                //             catch (error) {
+                //                 echo "Caught: ${error}"
+                //             }
+                //             allure jdk: '', properties: [[key: 'Platform', value: '${PLATFORM_NAME}'], [key: 'Downloaded From', value: '${DOWNLOAD_APP_FROM}'], [key: 'Build Number', value: '${BUILD_NUMBER}']], results: [[path: 'allure-results'], [path: '**/allure-results'], [path: './allure-results'], [path: './']]
+                //         } else {
+                //             echo '\033[1;31m /allure-results/ has not been found \033[0m'
+                //             sh "exit 1"
+                //         }
+                //     }
+                // }
 }
