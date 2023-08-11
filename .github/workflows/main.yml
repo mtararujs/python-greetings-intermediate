@@ -58,6 +58,13 @@ jobs:
           else
             echo "cucumber tags no"
           fi
+      - name: send failure notif
+        if: ${{ failure() }}
+        uses: rjstone/discord-webhook-notify@v1
+          with:
+            severity: error
+            details: Failure!
+            webhookUrl: https://discord.com/api/webhooks/1139668547946168561/ZHUF4ww-auCPadJknX44uhBS1utUe0SzBEWXrVmMZVFujKLfMY6a6l7L33fEQd9G-_4p
 
   test-dev:
     runs-on: ubuntu-latest
