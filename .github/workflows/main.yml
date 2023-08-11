@@ -40,10 +40,12 @@ jobs:
 
       - name: Print Cucumber Tags
         run: |
-          if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
-            echo "cucumber tags yes"
-          else
-            echo "cucumber tags no"
+          if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} ]]; then
+            if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
+              echo "cucumber tags yes"
+            else
+              echo "cucumber tags no"
+            fi
           fi
 
   test-dev:
@@ -107,8 +109,9 @@ jobs:
   notify-discord:
     runs-on: ubuntu-latest
     if: failure()
-    uses: rjstone/discord-webhook-notify@v1
-    with:
-        severity: error
-        details: Failure!
-        webhookUrl: https://discord.com/api/webhooks/1139668547946168561/ZHUF4ww-auCPadJknX44uhBS1utUe0SzBEWXrVmMZVFujKLfMY6a6l7L33fEQd9G-_4p
+    steps:
+      - uses: rjstone/discord-webhook-notify@v1
+        with:
+            severity: error
+            details: Failure!
+            webhookUrl: https://discord.com/api/webhooks/1139668547946168561/ZHUF4ww-auCPadJknX44uhBS1utUe0SzBEWXrVmMZVFujKLfMY6a6l7L33fEQd9G-_4p
