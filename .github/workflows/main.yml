@@ -14,6 +14,10 @@ on:
         description: 'Deploy to production?'
         default: 'Yes'
         required: true
+      TEST_SUITE:
+        description: 'Test Suite to Run'
+        default: 'ALL'
+        required: true
 
 jobs:
   build:
@@ -39,14 +43,21 @@ jobs:
           # Insert your deployment commands here
 
       - name: Print Cucumber Tags
+        env:
+          TEST_SUITE: ${{ inputs.TEST_SUITE }}
         run: |
-          if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} ]]; then
-            if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
-              echo "cucumber tags yes"
-            else
-              echo "cucumber tags no"
-            fi
+          local TEST_SUITE_VALUE=''
+          if [[ $TEST_SUITE == 'NONE' ]]; then
+            echo "cucumber tags none, no test executed"
+          else
+            TEST_SUITE_VALUE="$TEST_SUITE"
+            echo "cucumber tags $TEST_SUITE_VALUE"
           fi
+          # if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
+          #   echo "cucumber tags yes"
+          # else
+          #   echo "cucumber tags no"
+          # fi
 
   test-dev:
     runs-on: ubuntu-latest
