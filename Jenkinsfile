@@ -63,6 +63,30 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            script {
+                echo '\033[1;34mStarting always stage...\033[0m'
+            }
+        }
+        failure {
+            script {
+                slackSend channel: 'mobile_automation_updates',
+                        iconEmoji: ':red_circle:',
+                        color: "danger",
+                        message: "The build failed, please check the console log",
+                        tokenCredentialId: 'secret-slack-bot'
+            }
+        }
+        aborted {
+            sh 'docker rmi -f test'
+        }
+        cleanup {
+            echo 'Cleanup Condition!'
+            sh 'docker stop $(docker ps -a -q)'
+            sh 'docker rm -f $(docker ps -a -q)'
+        }
+    }
 }
 
 def deploy(String environment){
