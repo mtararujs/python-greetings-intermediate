@@ -57,6 +57,7 @@ jobs:
         with:
           folder: github-pages
           branch: main
+          ssh-key: true
 
       # - name: Setup Pages
       #   uses: actions/configure-pages@v2
