@@ -104,7 +104,7 @@ jobs:
           echo 'Cleaning up Docker images...'
           docker rmi -f test
 
-notify-discord:
+  notify-discord:
     runs-on: ubuntu-latest
     if: failure()
     uses: rjstone/discord-webhook-notify@v1
