@@ -38,11 +38,30 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ needs.build.result == 'success' }}
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
     steps:
       - name: Deploy to Dev
         run: |
           echo "Deployment of hello-app to dev is starting.."
           # Insert your deployment commands here
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: page
+          path: build
+          if-no-files-found: error
+      - uses: actions/download-artifact@master
+        with:
+          name: page
+          path: .
+      - uses: actions/configure-pages@v1
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@main
 
       - name: Print Cucumber Tags
         env:
