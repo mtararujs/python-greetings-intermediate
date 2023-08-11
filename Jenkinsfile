@@ -18,6 +18,7 @@ pipeline {
             steps {
                 script{
                     deploy("dev")
+                    load("commonFunctions.groovy").deploy("test groovy function")
                 }
             }
         }
