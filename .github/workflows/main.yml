@@ -46,18 +46,18 @@ jobs:
         env:
           TEST_SUITE: ${{ inputs.TEST_SUITE }}
         run: |
-          local TEST_SUITE_VALUE=''
-          if [[ $TEST_SUITE == 'NONE' ]]; then
-            echo "cucumber tags none, no test executed"
-          else
-            TEST_SUITE_VALUE="$TEST_SUITE"
-            echo "cucumber tags $TEST_SUITE_VALUE"
-          fi
-          # if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
-          #   echo "cucumber tags yes"
+          # local TEST_SUITE_VALUE=''
+          # if [[ $TEST_SUITE == 'NONE' ]]; then
+          #   echo "cucumber tags none, no test executed"
           # else
-          #   echo "cucumber tags no"
+          #   TEST_SUITE_VALUE="$TEST_SUITE"
+          #   echo "cucumber tags $TEST_SUITE_VALUE"
           # fi
+          if [[ ${{ github.event.inputs.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
+            echo "cucumber tags yes"
+          else
+            echo "cucumber tags no"
+          fi
 
   test-dev:
     runs-on: ubuntu-latest
