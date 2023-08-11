@@ -1,7 +1,7 @@
 properties([
     parameters {
-        choice(name: 'DEPLOY_TO_PRODUCTION', choices: ['Yes', 'No'], description: "Parameter responsible for deploying to PRD or not"),
-        choice(name: "CUCUMBER_TAG", choices: ['No', 'Yes'], description: "To run by Cucumber tag?"),
+        choice(name: 'DEPLOY_TO_PRODUCTION', choices: ['Yes', 'No'], description: "Parameter responsible for deploying to PRD or not")
+        choice(name: "CUCUMBER_TAG", choices: ['No', 'Yes'], description: "To run by Cucumber tag?")
 //         [$class              : 'DynamicReferenceParameter',
 //             choiceType          : 'ET_FORMATTED_HTML',
 //             omitValueField      : true,
