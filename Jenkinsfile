@@ -31,13 +31,17 @@ pipeline{
         stage('test-dev'){
             parallel{
                 stage('Tests for New Greetings Suite'){
-                    script{
-                        test("DEV")
+                    steps{
+                        script{
+                            test("DEV")
+                        }
                     }
                 }
                 stage('Tests for Old Greetings Suite'){
-                    script{
-                        test("DEV")
+                    steps{
+                        script{
+                            test("DEV")
+                        }
                     }
                 }
             }
