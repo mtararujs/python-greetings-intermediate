@@ -9,7 +9,7 @@ pipeline{
     environment{
         DOCKER_PASSWORD = credentials('docker-password')
         DOCKER_USERNAME = credentials('docker-username')
-        DISCORD_WEBHOOK = credentials('discord-webook')
+        DISCORD_WEBHOOK = credentials('discord-webhook')
     }
     stages {
         stage('build-app'){
