@@ -27,7 +27,7 @@ pipeline{
         stage('test-dev'){
             steps {
                 script{
-                    test("dev")
+                    test("DEV")
                 }
             }
         }
@@ -46,7 +46,7 @@ pipeline{
         stage('test-prod'){
             steps {
                 script{
-                    test("prod")
+                    test("PRD")
                 }
             }
         }
