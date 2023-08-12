@@ -66,6 +66,16 @@ pipeline{
                 }
             }
         }
+        stage('test-prod-ui'){
+            when {
+                expression { params.DEPLOY_TO_PRODUCTION == 'Yes'}
+            }
+            steps {
+                build job: 'python-greetings-ui-tests', parameters:[
+                    string(name: 'ENVIRONMENT', value: 'PRD')
+                ]
+            }
+        }
     }
     post {
         always {
