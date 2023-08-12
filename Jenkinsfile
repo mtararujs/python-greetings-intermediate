@@ -74,16 +74,15 @@ def build(String tag, String dockerfile){
 
 def test(String test_environment){
     echo "Testing of python-greetings-app on ${test_environment} is starting.."
-    // docker run .. 
-    // docker exec
-    // docker cp 
-    // extract report logic
-    // docker cleanup
+    sh "docker run --network=host -t -d --name api_tests_runner_${test_environment} mtararujs/api-tests-runner:latest"
+    sh "docker exec api_tests_runner_${test_environment} cucumber PLATFORM=${test_environment} --format html --out test-output/report.html"
+    sh "docker cp api_tests_runner_${test_environment}:/api-tests/test-output/report.html report_${test_environment}.html"
+    sh "docker rm -f api_tests_runner_${test_environment}"
 }
 
 def deploy(String deploy_environment){
     echo "Deployment of python-greetings-app on ${deploy_environment} is starting.."
     sh "kubectl set image deployment python-greetings-${deploy_environment} python-greetings-${deploy_environment}-pod=mtararujs/python-greetings-app:${GIT_COMMIT}"
     sh "kubectl scale deploy python-greetings-${deploy_environment} --replicas=0"
-    sh "kubectl scale deploy python-greetings-${deploy_environment} --replicas=1"
+    sh "kubectl scale deploy python-greetings-${deploy_environment} --replicas=2"
 }
