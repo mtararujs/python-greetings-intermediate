@@ -2,31 +2,19 @@ version: "3.8"
 services:
   python-greetings-local:
     build: .
-    image: mtararujs/python-greetings
+    image: mtararujs/python-greetings:8f0a2ca2d5f32eee756db1512d897943a5fbd531
     container_name: python-greetings-local
     ports:
       - "4444:3000"
-    deploy:
-      resources:
-        limits:
-          memory: 21M
-          cpus: "0.5"
-        reservations:
-          memory: 20M
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 10
-        window: 30s
-  redis:
+  redis-service:
     image: redis:latest
     container_name: redis
-  api-tests:
-    image: mtararujs/api-tests-runner
-    container_name: api-tetsts-runner
-    environment:
-      WAIT_HOSTS: python-greetings-local:3000, redis:6379
-    command: sh -c "/wait && cucumber PLATFORM=DEV"
-    depends_on:
-      - python-greetings-local
-      - redis
+  # api-tests:
+  #   image: mtararujs/api-tests-runner
+  #   container_name: api-tetsts-runner
+  #   environment:
+  #     WAIT_HOSTS: python-greetings-local:3000, redis:6379
+  #   command: sh -c "/wait && cucumber PLATFORM=DEV"
+  #   depends_on:
+  #     - python-greetings-local
+  #     - redis
