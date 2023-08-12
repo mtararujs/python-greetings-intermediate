@@ -11,8 +11,9 @@ pipeline{
         stage('build-app'){
             steps {
                 script {
+                    echo "Build ${GIT_COMMIT}"
                     echo "Build python-greetings-app.."
-                    build("mtararujs/python-greetings-app:latest", "Dockerfile")
+                    build("mtararujs/python-greetings-app:${GIT_COMMIT}", "Dockerfile")
                 }
             }
         }
@@ -82,5 +83,5 @@ def test(String test_environment){
 
 def deploy(String deploy_environment){
     echo "Deployment of python-greetings-app on ${deploy_environment} is starting.."
-    sh "kubectl set image deployment python-greetings-${deploy_environment} python-greetings-${deploy_environment}-pod=mtararujs/python-greetings-app:latest"
+    sh "kubectl set image deployment python-greetings-${deploy_environment} python-greetings-${deploy_environment}-pod=mtararujs/python-greetings-app:${GIT_COMMIT}"
 }
