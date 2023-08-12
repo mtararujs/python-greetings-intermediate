@@ -9,6 +9,7 @@ pipeline{
     environment{
         DOCKER_PASSWORD = credentials('docker-password')
         DOCKER_USERNAME = credentials('docker-username')
+        DISCORD_WEBHOOK = credentials('discord-webook')
     }
     stages {
         stage('build-app'){
@@ -69,7 +70,7 @@ pipeline{
     post {
         always {
             script{
-                discordSend description: "Jenkins Pipeline Build - Martins", footer: "Footer Text", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "https://discord.com/api/webhooks/1139668547946168561/ZHUF4ww-auCPadJknX44uhBS1utUe0SzBEWXrVmMZVFujKLfMY6a6l7L33fEQd9G-_4p"
+                discordSend description: "Python-greetings-application deploment for commit: https://github.com/mtararujs/python-greetings-intermediate/commit/${GIT_COMMIT}", footer: "http://localhost:8080/job/python-greetings/", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$DISCORD_WEBHOOK"
             }
         }
         failure {
