@@ -10,7 +10,7 @@ def get_greetings_from_redis():
         return cached_greeting
     else:
         # If the greeting is not cached in Redis, fetch it and cache it
-        greeting = "Welcome to CI/CD + Docker Course!"
+        greeting = "Welcome to CI/CD + Docker Course! Some changes were applied!"
         redis_client.set('latest_greeting', greeting)
         return greeting
 
