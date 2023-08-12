@@ -70,7 +70,7 @@ pipeline{
     post {
         always {
             script{
-                discordSend description: "Python-greetings-application deploment for commit: https://github.com/mtararujs/python-greetings-intermediate/commit/${GIT_COMMIT}", footer: "http://localhost:8080/job/python-greetings/", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$DISCORD_WEBHOOK"
+                discordSend description: "Python-greetings-application deploment for commit: https://github.com/mtararujs/python-greetings-intermediate", footer: "http://localhost:8080/job/python-greetings/", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$DISCORD_WEBHOOK"
             }
         }
         failure {
