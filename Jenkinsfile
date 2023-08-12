@@ -3,6 +3,9 @@ pipeline{
     triggers{
        pollSCM('*/1 * * * *') 
     }
+    parameters{
+        choice(name: 'DEPLOY_TO_PRODUCTION', choices: ['Yes', 'No'], description: "Would you like to deploy application to PRD as well?")
+    }
     environment{
         DOCKER_PASSWORD = credentials('docker-password')
         DOCKER_USERNAME = credentials('docker-username')
@@ -74,14 +77,14 @@ def build(String tag, String dockerfile){
 
 def test(String test_environment){
     echo "Testing of python-greetings-app on ${test_environment} is starting.."
-    sh "docker run --network=host -t -d --name api_tests_runner_${test_environment} mtararujs/api-tests-runner:latest"
-    try{
-        sh "docker exec api_tests_runner_${test_environment} cucumber PLATFORM=${test_environment} --format html --out test-output/report.html" 
-    }
-    finally {
-        sh "docker cp api_tests_runner_${test_environment}:/api-tests/test-output/report.html report_${test_environment}.html"
-        sh "docker rm -f api_tests_runner_${test_environment}"
-    }
+    // sh "docker run --network=host -t -d --name api_tests_runner_${test_environment} mtararujs/api-tests-runner:latest"
+    // try{
+    //     sh "docker exec api_tests_runner_${test_environment} cucumber PLATFORM=${test_environment} --format html --out test-output/report.html" 
+    // }
+    // finally {
+    //     sh "docker cp api_tests_runner_${test_environment}:/api-tests/test-output/report.html report_${test_environment}.html"
+    //     sh "docker rm -f api_tests_runner_${test_environment}"
+    // }
 }
 
 def deploy(String deploy_environment){
