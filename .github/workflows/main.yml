@@ -1,0 +1,96 @@
+name: CI/CD Pipeline
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'
+
+jobs:
+  build-deploy-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build and Push Docker Image
+        run: |
+          echo "Build $GITHUB_SHA"
+          docker build -t mtararujs/python-greetings-app:latest .
+          docker push mtararujs/python-greetings-app:latest
+
+      - name: Deploy to Dev
+        run: |
+          # Perform deployment to dev environment
+          echo "Deployment of hello-app to dev is starting.."
+          # Insert your deployment commands here
+
+          # Load common functions
+          # Insert loading of commonFunctions.groovy here
+
+          if [[ ${{ matrix.DEPLOY_TO_PRODUCTION }} == 'Yes' ]]; then
+            echo "cucumber tags yes"
+          else
+            echo "cucumber tags no"
+          fi
+
+      - name: Test Dev
+        run: |
+          # Perform testing for dev environment
+          echo "Testing of hello-app to dev is starting"
+          # Insert your testing commands here
+
+      - name: Approval
+        if: github.event_name == 'workflow_run'
+        run: |
+          deploymentDelay=$(curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{"event_type": "deployment_approval"}' \
+            https://api.github.com/repos/${{ github.repository }}/dispatches | jq -r '.workflow_run.updated_at')
+          sleep "$deploymentDelay"
+
+      - name: Deploy to PRD
+        if: matrix.DEPLOY_TO_PRODUCTION == 'Yes'
+        run: |
+          # Perform deployment to production environment
+          echo "Deployment of hello-app to prd is starting.."
+          # Insert your deployment commands here
+
+      - name: Test PRD
+        if: matrix.DEPLOY_TO_PRODUCTION == 'Yes'
+        run: |
+          # Perform testing for production environment
+          echo "Testing of hello-app to prd is starting"
+          # Insert your testing commands here
+
+      - name: Invoke Pipeline
+        run: |
+          # Trigger another pipeline job
+          echo "Invoking another pipeline job..."
+          # Insert your job triggering commands here
+
+      - name: Clean up
+        run: |
+          echo 'Cleanup Condition!'
+          docker stop $(docker ps -a -q)
+          docker rm -f $(docker ps -a -q)
+
+    env:
+      DEPLOY_TO_PRODUCTION: ${{ matrix.DEPLOY_TO_PRODUCTION }}
+
+  cleanup:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Clean up Docker Images
+        run: |
+          echo 'Cleaning up Docker images...'
+          docker rmi -f test
