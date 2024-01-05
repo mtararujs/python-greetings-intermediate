@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-greetings-prod
+  labels:
+    app: python-greetings-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: python-greetings-prod
+  template:
+    metadata:
+      labels:
+        app: python-greetings-prod
+    spec:
+      containers:
+      - name: python-greetings-prod-pod
+        image: mtararujs/python-greetings-app
+        ports:
+        - containerPort: 3000

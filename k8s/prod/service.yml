@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-greetings-service-prod
+spec:
+  selector:
+    app: python-greetings-prod
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 3000
+  type: LoadBalancer
